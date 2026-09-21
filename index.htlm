@@ -1,0 +1,213 @@
+
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>WebWorld - Votre portail Internet</title>
+
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: Arial, sans-serif;
+      background: #0f172a;
+      color: white;
+      min-height: 100vh;
+    }
+
+    header {
+      padding: 25px;
+      text-align: center;
+    }
+
+    header h1 {
+      font-size: 32px;
+      color: #38bdf8;
+    }
+
+    header p {
+      margin-top: 10px;
+      color: #94a3b8;
+    }
+
+    .container {
+      max-width: 900px;
+      margin: 40px auto;
+      padding: 20px;
+      text-align: center;
+    }
+
+    .search-box {
+      display: flex;
+      gap: 10px;
+      margin: 30px 0;
+    }
+
+    input {
+      flex: 1;
+      padding: 16px;
+      border: none;
+      border-radius: 10px;
+      font-size: 16px;
+      outline: none;
+    }
+
+    button {
+      padding: 16px 22px;
+      border: none;
+      border-radius: 10px;
+      background: #0284c7;
+      color: white;
+      font-size: 16px;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background: #0369a1;
+    }
+
+    h2 {
+      margin: 35px 0 20px;
+    }
+
+    .sites {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+      gap: 15px;
+    }
+
+    .site {
+      background: #1e293b;
+      padding: 25px 10px;
+      border-radius: 12px;
+      text-decoration: none;
+      color: white;
+      transition: 0.2s;
+    }
+
+    .site:hover {
+      background: #334155;
+      transform: translateY(-3px);
+    }
+
+    .icon {
+      font-size: 30px;
+      display: block;
+      margin-bottom: 10px;
+    }
+
+    footer {
+      text-align: center;
+      padding: 30px;
+      color: #64748b;
+    }
+
+    @media (max-width: 500px) {
+      .search-box {
+        flex-direction: column;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <header>
+    <h1>🌍 WebWorld</h1>
+    <p>Votre portail vers Internet</p>
+  </header>
+
+  <main class="container">
+
+    <h2>Que recherchez-vous ?</h2>
+
+    <form class="search-box" onsubmit="searchWeb(event)">
+      <input
+        type="text"
+        id="searchInput"
+        placeholder="Rechercher ou entrer une adresse web..."
+        autocomplete="off"
+      >
+      <button type="submit">Rechercher</button>
+    </form>
+
+    <h2>Sites populaires</h2>
+
+    <div class="sites">
+
+      <a class="site" href="https://www.google.com" target="_blank" rel="noopener">
+        <span class="icon">🔎</span>
+        Google
+      </a>
+
+      <a class="site" href="https://www.youtube.com" target="_blank" rel="noopener">
+        <span class="icon">▶️</span>
+        YouTube
+      </a>
+
+      <a class="site" href="https://www.wikipedia.org" target="_blank" rel="noopener">
+        <span class="icon">📚</span>
+        Wikipédia
+      </a>
+
+      <a class="site" href="https://www.reddit.com" target="_blank" rel="noopener">
+        <span class="icon">💬</span>
+        Reddit
+      </a>
+
+      <a class="site" href="https://www.github.com" target="_blank" rel="noopener">
+        <span class="icon">💻</span>
+        GitHub
+      </a>
+
+      <a class="site" href="https://www.twitch.tv" target="_blank" rel="noopener">
+        <span class="icon">🎮</span>
+        Twitch
+      </a>
+
+    </div>
+
+  </main>
+
+  <footer>
+    WebWorld © 2026 - Projet open source
+  </footer>
+
+  <script>
+    function searchWeb(event) {
+      event.preventDefault();
+
+      const input = document.getElementById("searchInput");
+      const query = input.value.trim();
+
+      if (!query) return;
+
+      let destination;
+
+      if (
+        query.startsWith("http://") ||
+        query.startsWith("https://")
+      ) {
+        destination = query;
+      } else if (
+        query.includes(".") &&
+        !query.includes(" ")
+      ) {
+        destination = "https://" + query;
+      } else {
+        destination =
+          "https://www.google.com/search?q=" +
+          encodeURIComponent(query);
+      }
+
+      window.open(destination, "_blank", "noopener");
+    }
+  </script>
+
+</body>
+</html>
