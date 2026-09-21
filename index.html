@@ -1,213 +1,873 @@
 
 <!DOCTYPE html>
 <html lang="fr">
+
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>WebWorld - Votre portail Internet</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-  <style>
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-    }
+<title>WebWorld - Navigateur gratuit</title>
 
-    body {
-      font-family: Arial, sans-serif;
-      background: #0f172a;
-      color: white;
-      min-height: 100vh;
-    }
+<style>
 
-    header {
-      padding: 25px;
-      text-align: center;
-    }
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
 
-    header h1 {
-      font-size: 32px;
-      color: #38bdf8;
-    }
+:root {
+  --bg: #0b1120;
+  --panel: #162238;
+  --panel-hover: #243653;
+  --border: #334155;
+  --text: #f8fafc;
+  --muted: #94a3b8;
+  --blue: #0ea5e9;
+  --blue-hover: #0284c7;
+}
 
-    header p {
-      margin-top: 10px;
-      color: #94a3b8;
-    }
+body {
+  font-family: Arial, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  min-height: 100vh;
+}
 
-    .container {
-      max-width: 900px;
-      margin: 40px auto;
-      padding: 20px;
-      text-align: center;
-    }
+/* HEADER */
 
-    .search-box {
-      display: flex;
-      gap: 10px;
-      margin: 30px 0;
-    }
+header {
+  text-align: center;
+  padding: 35px 20px 15px;
+}
 
-    input {
-      flex: 1;
-      padding: 16px;
-      border: none;
-      border-radius: 10px;
-      font-size: 16px;
-      outline: none;
-    }
+.logo {
+  font-size: 40px;
+  font-weight: bold;
+  color: #38bdf8;
+}
 
-    button {
-      padding: 16px 22px;
-      border: none;
-      border-radius: 10px;
-      background: #0284c7;
-      color: white;
-      font-size: 16px;
-      cursor: pointer;
-    }
+.subtitle {
+  color: var(--muted);
+  margin-top: 10px;
+  font-size: 16px;
+}
 
-    button:hover {
-      background: #0369a1;
-    }
+/* CONTENEUR */
 
-    h2 {
-      margin: 35px 0 20px;
-    }
+.container {
+  max-width: 1250px;
+  margin: auto;
+  padding: 25px 20px 50px;
+}
 
-    .sites {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
-      gap: 15px;
-    }
+/* RECHERCHE */
 
-    .site {
-      background: #1e293b;
-      padding: 25px 10px;
-      border-radius: 12px;
-      text-decoration: none;
-      color: white;
-      transition: 0.2s;
-    }
+.search-area {
+  display: flex;
+  gap: 10px;
+  max-width: 1100px;
+  margin: 35px auto;
+}
 
-    .site:hover {
-      background: #334155;
-      transform: translateY(-3px);
-    }
+.search-area select {
+  padding: 16px;
+  border-radius: 12px;
+  border: 1px solid var(--border);
+  background: var(--panel);
+  color: white;
+  font-size: 15px;
+  cursor: pointer;
+  max-width: 190px;
+}
 
-    .icon {
-      font-size: 30px;
-      display: block;
-      margin-bottom: 10px;
-    }
+.search-area input {
+  flex: 1;
+  min-width: 0;
+  padding: 17px;
+  border-radius: 12px;
+  border: none;
+  font-size: 16px;
+  outline: none;
+}
 
-    footer {
-      text-align: center;
-      padding: 30px;
-      color: #64748b;
-    }
+button {
+  padding: 14px 20px;
+  border: none;
+  border-radius: 10px;
+  background: var(--blue);
+  color: white;
+  font-size: 15px;
+  cursor: pointer;
+  transition: 0.2s;
+}
 
-    @media (max-width: 500px) {
-      .search-box {
-        flex-direction: column;
-      }
-    }
-  </style>
+button:hover {
+  background: var(--blue-hover);
+  transform: translateY(-2px);
+}
+
+button:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.secondary {
+  background: var(--panel);
+  border: 1px solid var(--border);
+}
+
+.secondary:hover {
+  background: var(--panel-hover);
+}
+
+/* NAVIGATEUR */
+
+.browser {
+  display: none;
+  margin-top: 35px;
+  border: 1px solid var(--border);
+  border-radius: 15px;
+  overflow: hidden;
+  background: var(--panel);
+}
+
+.browser.active {
+  display: block;
+}
+
+.navigation {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px;
+  flex-wrap: wrap;
+}
+
+.navigation button {
+  padding: 11px 14px;
+}
+
+.address-bar {
+  flex: 1;
+  min-width: 180px;
+  padding: 13px;
+  background: #0b1527;
+  color: white;
+  border: 1px solid var(--border);
+  border-radius: 9px;
+  outline: none;
+  font-size: 14px;
+}
+
+.status {
+  padding: 10px 15px;
+  background: #0d192d;
+  border-top: 1px solid var(--border);
+  color: var(--muted);
+  font-size: 13px;
+}
+
+.notice {
+  padding: 15px;
+  margin: 15px;
+  border-radius: 10px;
+  background: #172554;
+  color: #bfdbfe;
+  line-height: 1.5;
+  font-size: 14px;
+}
+
+.browser-frame {
+  width: 100%;
+  height: 650px;
+  border: none;
+  background: white;
+  display: block;
+}
+
+/* SITES */
+
+h2 {
+  text-align: center;
+  font-size: 26px;
+  margin: 45px 0 25px;
+}
+
+.sites {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(145px, 1fr));
+  gap: 16px;
+}
+
+.site {
+  min-height: 145px;
+  padding: 20px 10px;
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  color: white;
+  text-decoration: none;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  transition: 0.2s;
+}
+
+.site:hover {
+  background: var(--panel-hover);
+  transform: translateY(-4px);
+  border-color: var(--blue);
+}
+
+.site-icon {
+  font-size: 38px;
+}
+
+.site-name {
+  font-size: 16px;
+}
+
+/* CATEGORIES */
+
+.categories {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+/* FOOTER */
+
+footer {
+  text-align: center;
+  padding: 35px 20px;
+  color: #64748b;
+}
+
+/* MOBILE */
+
+@media (max-width: 650px) {
+
+  .logo {
+    font-size: 30px;
+  }
+
+  .search-area {
+    flex-direction: column;
+  }
+
+  .search-area select {
+    max-width: none;
+    width: 100%;
+  }
+
+  .search-area button {
+    width: 100%;
+  }
+
+  .address-bar {
+    flex-basis: 100%;
+    order: 10;
+  }
+
+  .browser-frame {
+    height: 550px;
+  }
+
+}
+
+</style>
+
 </head>
 
 <body>
 
-  <header>
-    <h1>🌍 WebWorld</h1>
-    <p>Votre portail vers Internet</p>
-  </header>
+<header>
 
-  <main class="container">
+  <div class="logo">🌍 WebWorld</div>
 
-    <h2>Que recherchez-vous ?</h2>
+  <p class="subtitle">
+    Votre portail vers Internet
+  </p>
 
-    <form class="search-box" onsubmit="searchWeb(event)">
+</header>
+
+<main class="container">
+
+  <!-- RECHERCHE PRINCIPALE -->
+
+  <form class="search-area" onsubmit="startSearch(event)">
+
+    <select id="searchEngine" aria-label="Choisir un moteur de recherche">
+
+      <option value="google">🔍 Google</option>
+
+      <option value="bing">🟢 Bing</option>
+
+      <option value="duckduckgo">🦆 DuckDuckGo</option>
+
+      <option value="yahoo">🟣 Yahoo</option>
+
+      <option value="ecosia">🌱 Ecosia</option>
+
+    </select>
+
+    <input
+      type="text"
+      id="mainSearch"
+      placeholder="Rechercher ou entrer une adresse web..."
+      autocomplete="off"
+      aria-label="Recherche"
+    >
+
+    <button type="submit">
+      🔍 Rechercher
+    </button>
+
+  </form>
+
+  <!-- ZONE NAVIGATEUR -->
+
+  <section class="browser" id="browser">
+
+    <div class="navigation">
+
+      <button
+        class="secondary"
+        id="backBtn"
+        onclick="goBack()"
+        title="Retour"
+      >
+        ◀
+      </button>
+
+      <button
+        class="secondary"
+        id="forwardBtn"
+        onclick="goForward()"
+        title="Suivant"
+      >
+        ▶
+      </button>
+
+      <button
+        class="secondary"
+        onclick="goHome()"
+        title="Accueil"
+      >
+        🏠
+      </button>
+
+      <button
+        class="secondary"
+        onclick="reloadPage()"
+        title="Actualiser"
+      >
+        🔄
+      </button>
+
       <input
         type="text"
-        id="searchInput"
-        placeholder="Rechercher ou entrer une adresse web..."
-        autocomplete="off"
+        id="addressBar"
+        class="address-bar"
+        placeholder="https://example.com"
+        onkeydown="addressKey(event)"
+        aria-label="Adresse web"
       >
-      <button type="submit">Rechercher</button>
-    </form>
 
-    <h2>Sites populaires</h2>
+      <button onclick="navigateAddress()">
+        Aller
+      </button>
 
-    <div class="sites">
+      <button
+        class="secondary"
+        onclick="openExternal()"
+        title="Ouvrir dans un nouvel onglet"
+      >
+        ↗
+      </button>
 
-      <a class="site" href="https://www.google.com" target="_blank" rel="noopener">
-        <span class="icon">🔎</span>
-        Google
-      </a>
-
-      <a class="site" href="https://www.youtube.com" target="_blank" rel="noopener">
-        <span class="icon">▶️</span>
-        YouTube
-      </a>
-
-      <a class="site" href="https://www.wikipedia.org" target="_blank" rel="noopener">
-        <span class="icon">📚</span>
-        Wikipédia
-      </a>
-
-      <a class="site" href="https://www.reddit.com" target="_blank" rel="noopener">
-        <span class="icon">💬</span>
-        Reddit
-      </a>
-
-      <a class="site" href="https://www.github.com" target="_blank" rel="noopener">
-        <span class="icon">💻</span>
-        GitHub
-      </a>
-
-      <a class="site" href="https://www.twitch.tv" target="_blank" rel="noopener">
-        <span class="icon">🎮</span>
-        Twitch
-      </a>
+      <button
+        class="secondary"
+        onclick="closeBrowser()"
+        title="Fermer"
+      >
+        ✕
+      </button>
 
     </div>
 
-  </main>
+    <div class="status" id="status">
+      Prêt à naviguer
+    </div>
 
-  <footer>
-    WebWorld © 2026 - Projet open source
-  </footer>
+    <div class="notice">
 
-  <script>
-    function searchWeb(event) {
-      event.preventDefault();
+      ℹ️ Certains sites empêchent l'affichage dans une fenêtre intégrée.
+      Si une page ne s'affiche pas, utilise le bouton ↗ pour l'ouvrir
+      directement dans un nouvel onglet.
 
-      const input = document.getElementById("searchInput");
-      const query = input.value.trim();
+    </div>
 
-      if (!query) return;
+    <iframe
+      id="webFrame"
+      class="browser-frame"
+      title="Navigateur WebWorld"
+      allow="fullscreen"
+      referrerpolicy="strict-origin-when-cross-origin">
+    </iframe>
 
-      let destination;
+  </section>
 
-      if (
-        query.startsWith("http://") ||
-        query.startsWith("https://")
-      ) {
-        destination = query;
-      } else if (
-        query.includes(".") &&
-        !query.includes(" ")
-      ) {
-        destination = "https://" + query;
-      } else {
-        destination =
-          "https://www.google.com/search?q=" +
-          encodeURIComponent(query);
-      }
+  <!-- SITES POPULAIRES -->
 
-      window.open(destination, "_blank", "noopener");
-    }
-  </script>
+  <h2>🌐 Sites populaires</h2>
+
+  <div class="sites">
+
+    <a class="site"
+       href="https://www.google.com"
+       target="_blank"
+       rel="noopener noreferrer">
+
+      <span class="site-icon">🔎</span>
+      <span class="site-name">Google</span>
+
+    </a>
+
+    <a class="site"
+       href="https://www.bing.com"
+       target="_blank"
+       rel="noopener noreferrer">
+
+      <span class="site-icon">🟢</span>
+      <span class="site-name">Bing</span>
+
+    </a>
+
+    <a class="site"
+       href="https://duckduckgo.com"
+       target="_blank"
+       rel="noopener noreferrer">
+
+      <span class="site-icon">🦆</span>
+      <span class="site-name">DuckDuckGo</span>
+
+    </a>
+
+    <a class="site"
+       href="https://www.ecosia.org"
+       target="_blank"
+       rel="noopener noreferrer">
+
+      <span class="site-icon">🌱</span>
+      <span class="site-name">Ecosia</span>
+
+    </a>
+
+    <a class="site"
+       href="https://www.youtube.com"
+       target="_blank"
+       rel="noopener noreferrer">
+
+      <span class="site-icon">▶️</span>
+      <span class="site-name">YouTube</span>
+
+    </a>
+
+    <a class="site"
+       href="https://www.wikipedia.org"
+       target="_blank"
+       rel="noopener noreferrer">
+
+      <span class="site-icon">📚</span>
+      <span class="site-name">Wikipédia</span>
+
+    </a>
+
+    <a class="site"
+       href="https://www.reddit.com"
+       target="_blank"
+       rel="noopener noreferrer">
+
+      <span class="site-icon">💬</span>
+      <span class="site-name">Reddit</span>
+
+    </a>
+
+    <a class="site"
+       href="https://github.com"
+       target="_blank"
+       rel="noopener noreferrer">
+
+      <span class="site-icon">💻</span>
+      <span class="site-name">GitHub</span>
+
+    </a>
+
+    <a class="site"
+       href="https://www.twitch.tv"
+       target="_blank"
+       rel="noopener noreferrer">
+
+      <span class="site-icon">🎮</span>
+      <span class="site-name">Twitch</span>
+
+    </a>
+
+    <a class="site"
+       href="https://www.amazon.fr"
+       target="_blank"
+       rel="noopener noreferrer">
+
+      <span class="site-icon">📦</span>
+      <span class="site-name">Amazon</span>
+
+    </a>
+
+    <a class="site"
+       href="https://www.instagram.com"
+       target="_blank"
+       rel="noopener noreferrer">
+
+      <span class="site-icon">📸</span>
+      <span class="site-name">Instagram</span>
+
+    </a>
+
+    <a class="site"
+       href="https://www.canva.com"
+       target="_blank"
+       rel="noopener noreferrer">
+
+      <span class="site-icon">🎨</span>
+      <span class="site-name">Canva</span>
+
+    </a>
+
+  </div>
+
+  <!-- CATEGORIES -->
+
+  <h2>🧭 Explorer Internet</h2>
+
+  <div class="categories">
+
+    <button onclick="searchCategory('actualités')">
+      📰 Actualités
+    </button>
+
+    <button onclick="searchCategory('jeux gratuits en ligne')">
+      🎮 Jeux
+    </button>
+
+    <button onclick="searchCategory('outils gratuits en ligne')">
+      🛠️ Outils
+    </button>
+
+    <button onclick="searchCategory('films et séries')">
+      🎬 Films et séries
+    </button>
+
+    <button onclick="searchCategory('apprendre gratuitement')">
+      📖 Apprendre
+    </button>
+
+    <button onclick="searchCategory('musique')">
+      🎵 Musique
+    </button>
+
+  </div>
+
+</main>
+
+<footer>
+
+  WebWorld © 2026 — Projet open source
+
+</footer>
+
+<script>
+
+/* VARIABLES */
+
+let pageHistory = [];
+let currentIndex = -1;
+let currentUrl = "";
+
+/* ELEMENTS */
+
+const browser = document.getElementById("browser");
+const frame = document.getElementById("webFrame");
+const addressBar = document.getElementById("addressBar");
+const mainSearch = document.getElementById("mainSearch");
+const statusText = document.getElementById("status");
+const backBtn = document.getElementById("backBtn");
+const forwardBtn = document.getElementById("forwardBtn");
+
+/* MOTEURS DE RECHERCHE */
+
+const engines = {
+
+  google:
+    "https://www.google.com/search?q=",
+
+  bing:
+    "https://www.bing.com/search?q=",
+
+  duckduckgo:
+    "https://duckduckgo.com/?q=",
+
+  yahoo:
+    "https://search.yahoo.com/search?p=",
+
+  ecosia:
+    "https://www.ecosia.org/search?q="
+
+};
+
+/* TRANSFORMER UNE REQUÊTE EN URL */
+
+function resolveUrl(input) {
+
+  input = input.trim();
+
+  if (!input) return null;
+
+  if (
+    input.startsWith("https://") ||
+    input.startsWith("http://")
+  ) {
+    return input;
+  }
+
+  if (input.startsWith("www.")) {
+    return "https://" + input;
+  }
+
+  if (
+    input.includes(".") &&
+    !input.includes(" ")
+  ) {
+    return "https://" + input;
+  }
+
+  const engine =
+    document.getElementById("searchEngine").value;
+
+  return engines[engine] +
+    encodeURIComponent(input);
+
+}
+
+/* RECHERCHE */
+
+function startSearch(event) {
+
+  event.preventDefault();
+
+  const query = mainSearch.value.trim();
+
+  if (!query) return;
+
+  const url = resolveUrl(query);
+
+  navigateTo(url);
+
+}
+
+/* NAVIGUER */
+
+function navigateTo(url, addHistory = true) {
+
+  if (!url) return;
+
+  browser.classList.add("active");
+
+  if (addHistory) {
+
+    pageHistory =
+      pageHistory.slice(0, currentIndex + 1);
+
+    pageHistory.push(url);
+
+    currentIndex++;
+
+  }
+
+  currentUrl = url;
+
+  addressBar.value = url;
+
+  statusText.textContent =
+    "Chargement : " + url;
+
+  frame.src = url;
+
+  updateButtons();
+
+  browser.scrollIntoView({
+    behavior: "smooth",
+    block: "start"
+  });
+
+}
+
+/* BARRE D'ADRESSE */
+
+function navigateAddress() {
+
+  const input = addressBar.value.trim();
+
+  if (!input) return;
+
+  const url = resolveUrl(input);
+
+  navigateTo(url);
+
+}
+
+function addressKey(event) {
+
+  if (event.key === "Enter") {
+    navigateAddress();
+  }
+
+}
+
+/* RETOUR */
+
+function goBack() {
+
+  if (currentIndex > 0) {
+
+    currentIndex--;
+
+    navigateTo(
+      pageHistory[currentIndex],
+      false
+    );
+
+  }
+
+}
+
+/* SUIVANT */
+
+function goForward() {
+
+  if (currentIndex < pageHistory.length - 1) {
+
+    currentIndex++;
+
+    navigateTo(
+      pageHistory[currentIndex],
+      false
+    );
+
+  }
+
+}
+
+/* ACTUALISER */
+
+function reloadPage() {
+
+  if (!currentUrl) return;
+
+  frame.src = currentUrl;
+
+  statusText.textContent =
+    "Actualisation : " + currentUrl;
+
+}
+
+/* ACCUEIL */
+
+function goHome() {
+
+  browser.classList.remove("active");
+
+  frame.src = "";
+
+  addressBar.value = "";
+
+  currentUrl = "";
+
+  statusText.textContent =
+    "Accueil WebWorld";
+
+}
+
+/* FERMER */
+
+function closeBrowser() {
+
+  browser.classList.remove("active");
+
+  frame.src = "";
+
+}
+
+/* OUVRIR DANS UN NOUVEL ONGLET */
+
+function openExternal() {
+
+  if (!currentUrl) return;
+
+  window.open(
+    currentUrl,
+    "_blank",
+    "noopener,noreferrer"
+  );
+
+}
+
+/* BOUTONS */
+
+function updateButtons() {
+
+  backBtn.disabled = currentIndex <= 0;
+
+  forwardBtn.disabled =
+    currentIndex >= pageHistory.length - 1;
+
+}
+
+/* CATEGORIES */
+
+function searchCategory(category) {
+
+  mainSearch.value = category;
+
+  const engine =
+    document.getElementById("searchEngine").value;
+
+  navigateTo(
+    engines[engine] +
+    encodeURIComponent(category)
+  );
+
+}
+
+/* CHARGEMENT */
+
+frame.addEventListener("load", function() {
+
+  statusText.textContent =
+    "Page chargée — " + currentUrl;
+
+});
+
+/* INITIALISATION */
+
+updateButtons();
+
+</script>
 
 </body>
 </html>
