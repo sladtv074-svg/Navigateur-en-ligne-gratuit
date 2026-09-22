@@ -1,5 +1,9 @@
 "use strict";
 
+/* =========================
+   ÉLÉMENTS HTML
+========================= */
+
 const tabsBar = document.getElementById("tabsBar");
 const newTabButton = document.getElementById("newTabButton");
 const privateButton = document.getElementById("privateButton");
@@ -27,6 +31,10 @@ const searchEngine = document.getElementById("searchEngine");
 const homeSearchInput = document.getElementById("homeSearchInput");
 const homeSearchButton = document.getElementById("homeSearchButton");
 
+/* =========================
+   VARIABLES
+========================= */
+
 const HOME_URL = "about:blank";
 
 let tabs = [];
@@ -35,15 +43,28 @@ let privateMode = false;
 
 let historyItems = loadHistory();
 
+/*
+  Ces moteurs refusent généralement les iframes.
+  Ils seront donc ouverts dans le même onglet.
+*/
+const searchDomains = [
+  "google.com",
+  "bing.com",
+  "duckduckgo.com",
+  "yahoo.com",
+  "ecosia.org"
+];
+
+/* =========================
+   ONGLETS
+========================= */
+
 function createTab(isPrivate = privateMode) {
   const tab = {
-    id: crypto.randomUUID
-      ? crypto.randomUUID()
-      : String(Date.now() + Math.random()),
-
+    id: Date.now().toString() + Math.random().toString(16),
     title: isPrivate ? "Onglet privé" : "Nouvel onglet",
     url: HOME_URL,
-    isPrivate,
+    isPrivate: isPrivate,
     history: []
   };
 
@@ -52,8 +73,6 @@ function createTab(isPrivate = privateMode) {
 
   renderTabs();
   showTabContent();
-
-  return tab;
 }
 
 function getActiveTab() {
@@ -73,20 +92,19 @@ function renderTabs() {
 
     const title = document.createElement("span");
     title.className = "tab-title";
-    title.textContent = tab.isPrivate
-      ? "🕶️ " + tab.title
-      : tab.title;
+    title.textContent =
+      (tab.isPrivate ? "🕶️ " : "") + tab.title;
+
+    const closeButton = document.createElement("button");
+    closeButton.className = "close-tab";
+    closeButton.textContent = "×";
+    closeButton.title = "Fermer l’onglet";
 
     title.addEventListener("click", () => {
       activeTabId = tab.id;
       renderTabs();
       showTabContent();
     });
-
-    const closeButton = document.createElement("button");
-    closeButton.className = "close-tab";
-    closeButton.textContent = "×";
-    closeButton.title = "Fermer cet onglet";
 
     closeButton.addEventListener("click", event => {
       event.stopPropagation();
@@ -116,18 +134,21 @@ function closeTab(tabId) {
   tabs.splice(index, 1);
 
   if (tabs.length === 0) {
-    createTab(privateMode);
+    createTab(false);
     return;
   }
 
   if (activeTabId === tabId) {
-    const newIndex = Math.max(0, index - 1);
-    activeTabId = tabs[newIndex].id;
+    activeTabId = tabs[Math.max(0, index - 1)].id;
   }
 
   renderTabs();
   showTabContent();
 }
+
+/* =========================
+   AFFICHAGE
+========================= */
 
 function showTabContent() {
   const tab = getActiveTab();
@@ -136,7 +157,8 @@ function showTabContent() {
     return;
   }
 
-  addressInput.value = tab.url === HOME_URL ? "" : tab.url;
+  addressInput.value =
+    tab.url === HOME_URL ? "" : tab.url;
 
   if (tab.url === HOME_URL) {
     homePage.classList.remove("hidden");
@@ -152,52 +174,48 @@ function showTabContent() {
   }
 }
 
-function normalizeUrl(value) {
-  const trimmed = value.trim();
+/* =========================
+   URL ET RECHERCHE
+========================= */
 
-  if (!trimmed) {
-    return HOME_URL;
+function isSearchUrl(url) {
+  try {
+    const hostname = new URL(url).hostname
+      .toLowerCase()
+      .replace("www.", "");
+
+    return searchDomains.some(domain =>
+      hostname === domain ||
+      hostname.endsWith("." + domain)
+    );
+  } catch {
+    return false;
   }
-
-  if (
-    trimmed.startsWith("http://") ||
-    trimmed.startsWith("https://")
-  ) {
-    return trimmed;
-  }
-
-  if (
-    trimmed.includes(".") &&
-    !trimmed.includes(" ")
-  ) {
-    return "https://" + trimmed;
-  }
-
-  const selectedEngine = searchEngine.value;
-
-  return selectedEngine + encodeURIComponent(trimmed);
 }
 
-function navigate(value) {
-  const tab = getActiveTab();
+function normalizeInput(value) {
+  const input = value.trim();
 
-  if (!tab) {
-    return;
+  if (!input) {
+    return null;
   }
 
-  const url = normalizeUrl(value);
+  const looksLikeUrl =
+    input.startsWith("http://") ||
+    input.startsWith("https://") ||
+    (
+      input.includes(".") &&
+      !input.includes(" ")
+    );
 
-  tab.url = url;
-  tab.title = getTitleFromUrl(url);
-
-  tab.history.push(url);
-
-  if (!tab.isPrivate) {
-    saveHistoryItem(url);
+  if (looksLikeUrl) {
+    return input.startsWith("http")
+      ? input
+      : "https://" + input;
   }
 
-  renderTabs();
-  showTabContent();
+  return searchEngine.value +
+    encodeURIComponent(input);
 }
 
 function getTitleFromUrl(url) {
@@ -206,11 +224,57 @@ function getTitleFromUrl(url) {
   }
 
   try {
-    return new URL(url).hostname.replace("www.", "");
+    return new URL(url).hostname
+      .replace("www.", "");
   } catch {
     return "Page web";
   }
 }
+
+/*
+  Fonction principale de navigation.
+*/
+function navigate(value) {
+  const tab = getActiveTab();
+
+  if (!tab) {
+    return;
+  }
+
+  const url = normalizeInput(value);
+
+  if (!url) {
+    return;
+  }
+
+  tab.url = url;
+  tab.title = getTitleFromUrl(url);
+  tab.history.push(url);
+
+  if (!tab.isPrivate) {
+    saveHistoryItem(url);
+  }
+
+  renderTabs();
+
+  /*
+    Les moteurs de recherche bloquent les iframes.
+    On les ouvre donc dans le même onglet réel.
+  */
+  if (isSearchUrl(url)) {
+    window.location.href = url;
+    return;
+  }
+
+  /*
+    Pour les autres sites, on tente l'affichage intégré.
+  */
+  showTabContent();
+}
+
+/* =========================
+   HISTORIQUE
+========================= */
 
 function loadHistory() {
   try {
@@ -223,7 +287,7 @@ function loadHistory() {
 
 function saveHistoryItem(url) {
   const item = {
-    url,
+    url: url,
     date: new Date().toLocaleString("fr-FR")
   };
 
@@ -242,7 +306,8 @@ function renderHistory() {
   historyList.innerHTML = "";
 
   if (historyItems.length === 0) {
-    historyList.textContent = "Aucun historique enregistré.";
+    historyList.textContent =
+      "Aucun historique enregistré.";
     return;
   }
 
@@ -254,28 +319,27 @@ function renderHistory() {
     link.href = "#";
     link.textContent = item.url;
 
-    link.addEventListener("click", event => {
-      event.preventDefault();
-
-      historyPanel.classList.add("hidden");
-      navigate(item.url);
-    });
-
     const date = document.createElement("span");
     date.className = "history-date";
     date.textContent = item.date;
 
+    link.addEventListener("click", event => {
+      event.preventDefault();
+      historyPanel.classList.add("hidden");
+      navigate(item.url);
+    });
+
     row.appendChild(link);
     row.appendChild(date);
-
     historyList.appendChild(row);
   });
 }
 
 function toggleHistory() {
-  const isHidden = historyPanel.classList.contains("hidden");
+  const opening =
+    historyPanel.classList.contains("hidden");
 
-  if (isHidden) {
+  if (opening) {
     homePage.classList.add("hidden");
     browserPage.classList.add("hidden");
     historyPanel.classList.remove("hidden");
@@ -286,10 +350,18 @@ function toggleHistory() {
   }
 }
 
+/* =========================
+   MODE PRIVÉ
+========================= */
+
 function togglePrivateMode() {
   privateMode = !privateMode;
 
-  privateButton.classList.toggle("active", privateMode);
+  privateButton.classList.toggle(
+    "active",
+    privateMode
+  );
+
   privateButton.textContent = privateMode
     ? "🕶️ Privé activé"
     : "🕶️ Privé";
@@ -309,6 +381,10 @@ function togglePrivateMode() {
   }
 }
 
+/* =========================
+   RECHERCHE DEPUIS L'ACCUEIL
+========================= */
+
 function performHomeSearch() {
   const query = homeSearchInput.value.trim();
 
@@ -320,11 +396,18 @@ function performHomeSearch() {
   navigate(query);
 }
 
+/* =========================
+   ÉVÉNEMENTS
+========================= */
+
 newTabButton.addEventListener("click", () => {
   createTab(privateMode);
 });
 
-privateButton.addEventListener("click", togglePrivateMode);
+privateButton.addEventListener(
+  "click",
+  togglePrivateMode
+);
 
 goButton.addEventListener("click", () => {
   navigate(addressInput.value);
@@ -336,7 +419,10 @@ addressInput.addEventListener("keydown", event => {
   }
 });
 
-homeSearchButton.addEventListener("click", performHomeSearch);
+homeSearchButton.addEventListener(
+  "click",
+  performHomeSearch
+);
 
 homeSearchInput.addEventListener("keydown", event => {
   if (event.key === "Enter") {
@@ -365,19 +451,11 @@ reloadButton.addEventListener("click", () => {
 });
 
 backButton.addEventListener("click", () => {
-  try {
-    browserFrame.contentWindow.history.back();
-  } catch {
-    window.history.back();
-  }
+  window.history.back();
 });
 
 forwardButton.addEventListener("click", () => {
-  try {
-    browserFrame.contentWindow.history.forward();
-  } catch {
-    window.history.forward();
-  }
+  window.history.forward();
 });
 
 externalButton.addEventListener("click", () => {
@@ -388,7 +466,10 @@ externalButton.addEventListener("click", () => {
   }
 });
 
-historyButton.addEventListener("click", toggleHistory);
+historyButton.addEventListener(
+  "click",
+  toggleHistory
+);
 
 clearHistoryButton.addEventListener("click", () => {
   historyItems = [];
@@ -396,35 +477,8 @@ clearHistoryButton.addEventListener("click", () => {
   renderHistory();
 });
 
-browserFrame.addEventListener("load", () => {
-  const tab = getActiveTab();
+/* =========================
+   DÉMARRAGE
+========================= */
 
-  if (!tab) {
-    return;
-  }
-
-  try {
-    const frameUrl = browserFrame.contentWindow.location.href;
-
-    if (
-      frameUrl &&
-      frameUrl !== "about:blank" &&
-      frameUrl !== tab.url
-    ) {
-      tab.url = frameUrl;
-      tab.title = getTitleFromUrl(frameUrl);
-
-      if (!tab.isPrivate) {
-        saveHistoryItem(frameUrl);
-      }
-
-      addressInput.value = frameUrl;
-      renderTabs();
-    }
-  } catch {
-    // Les sites externes peuvent empêcher l’accès à leur URL.
-  }
-});
-
-// Démarrage
 createTab(false);
