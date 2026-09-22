@@ -1,1 +1,289 @@
+:root {
+  --background: #0b1220;
+  --panel: #111c2e;
+  --panel-light: #1b2a42;
+  --border: #30415b;
+  --text: #f1f5f9;
+  --muted: #9fb0c7;
+  --accent: #3b82f6;
+  --accent-hover: #2563eb;
+  --private: #7c3aed;
+  --danger: #dc2626;
+}
 
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  background: var(--background);
+  color: var(--text);
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+button,
+input,
+select {
+  font: inherit;
+}
+
+button {
+  cursor: pointer;
+}
+
+.topbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 15px;
+  padding: 15px 20px;
+  background: var(--panel);
+  border-bottom: 1px solid var(--border);
+}
+
+.logo {
+  font-size: 23px;
+  font-weight: bold;
+}
+
+.top-actions {
+  display: flex;
+  gap: 8px;
+}
+
+button {
+  padding: 9px 13px;
+  color: var(--text);
+  background: var(--panel-light);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+}
+
+button:hover {
+  background: var(--accent);
+}
+
+#privateButton.active {
+  background: var(--private);
+  border-color: #a78bfa;
+}
+
+.tabs-bar {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  min-height: 45px;
+  padding: 6px 10px;
+  overflow-x: auto;
+  background: #080e19;
+  border-bottom: 1px solid var(--border);
+}
+
+.tab {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 150px;
+  max-width: 240px;
+  padding: 9px 11px;
+  color: var(--muted);
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: 8px 8px 0 0;
+  white-space: nowrap;
+}
+
+.tab.active {
+  color: white;
+  background: var(--accent);
+  border-color: var(--accent);
+}
+
+.tab-title {
+  flex: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.close-tab {
+  padding: 0 4px;
+  border: none;
+  background: transparent;
+}
+
+.close-tab:hover {
+  background: var(--danger);
+}
+
+.navigation-bar {
+  display: flex;
+  gap: 7px;
+  padding: 12px;
+  background: var(--panel);
+  border-bottom: 1px solid var(--border);
+}
+
+.navigation-bar input {
+  flex: 1;
+  min-width: 100px;
+  padding: 0 12px;
+  color: white;
+  background: #080e19;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+}
+
+main {
+  width: 100%;
+}
+
+.home-page {
+  max-width: 900px;
+  margin: 70px auto;
+  padding: 25px;
+  text-align: center;
+}
+
+.home-page h1 {
+  font-size: clamp(28px, 5vw, 48px);
+}
+
+.home-page p {
+  color: var(--muted);
+}
+
+.search-box {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-top: 30px;
+}
+
+.search-box select,
+.search-box input {
+  min-height: 45px;
+  padding: 0 12px;
+  color: white;
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+}
+
+.search-box select {
+  flex: 0 0 150px;
+}
+
+.search-box input {
+  flex: 1;
+  min-width: 180px;
+}
+
+.quick-links {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-top: 35px;
+}
+
+.quick-links a {
+  padding: 12px 18px;
+  color: white;
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  text-decoration: none;
+}
+
+.quick-links a:hover {
+  background: var(--accent);
+}
+
+.browser-page {
+  position: relative;
+}
+
+.browser-frame,
+iframe {
+  display: block;
+  width: 100%;
+  height: calc(100vh - 180px);
+  min-height: 450px;
+  border: none;
+  background: white;
+}
+
+.frame-notice {
+  padding: 10px 15px;
+  color: #bfdbfe;
+  background: #172554;
+  font-size: 13px;
+  text-align: center;
+}
+
+.external-button {
+  position: fixed;
+  right: 20px;
+  bottom: 20px;
+  background: var(--accent);
+}
+
+.history-panel {
+  max-width: 900px;
+  margin: 25px auto;
+  padding: 20px;
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+}
+
+.panel-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.history-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 15px;
+  padding: 12px 0;
+  border-bottom: 1px solid var(--border);
+}
+
+.history-item a {
+  color: #93c5fd;
+  overflow-wrap: anywhere;
+}
+
+.history-date {
+  color: var(--muted);
+  font-size: 12px;
+}
+
+.hidden {
+  display: none !important;
+}
+
+@media (max-width: 650px) {
+  .navigation-bar {
+    flex-wrap: wrap;
+  }
+
+  .navigation-bar input {
+    order: 2;
+    flex-basis: 100%;
+    min-height: 43px;
+  }
+
+  .tab {
+    min-width: 125px;
+  }
+
+  .home-page {
+    margin: 25px auto;
+  }
+}
