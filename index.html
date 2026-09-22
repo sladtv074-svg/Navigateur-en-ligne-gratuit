@@ -2,487 +2,111 @@
 <html lang="fr">
 <head>
   <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-  <meta
-    name="viewport"
-    content="width=device-width, initial-scale=1.0"
-  >
+  <title>WebWorld</title>
 
-  <meta
-    name="description"
-    content="WebWorld - portail web gratuit avec moteur de recherche et accès rapide aux sites populaires"
-  >
-
-  <title>WebWorld - Navigateur gratuit</title>
-
-  <style>
-    :root {
-      --background: #0b111b;
-      --panel: #111b2b;
-      --panel-light: #18253a;
-      --border: #2c3b52;
-      --text: #f1f5f9;
-      --muted: #9caec5;
-      --accent: #3b82f6;
-      --accent-hover: #2563eb;
-      --danger: #ef4444;
-    }
-
-    * {
-      box-sizing: border-box;
-    }
-
-    body {
-      margin: 0;
-      min-height: 100vh;
-      background:
-        radial-gradient(
-          circle at top left,
-          #172554 0%,
-          transparent 35%
-        ),
-        var(--background);
-      color: var(--text);
-      font-family: Arial, Helvetica, sans-serif;
-    }
-
-    header {
-      padding: 24px 18px 12px;
-      text-align: center;
-    }
-
-    header h1 {
-      margin: 0;
-      font-size: clamp(28px, 5vw, 48px);
-      letter-spacing: -1px;
-    }
-
-    header p {
-      margin: 10px 0 0;
-      color: var(--muted);
-      font-size: 15px;
-    }
-
-    .version {
-      display: inline-block;
-      margin-top: 12px;
-      padding: 5px 10px;
-      border: 1px solid #166534;
-      border-radius: 999px;
-      background: #052e16;
-      color: #86efac;
-      font-size: 12px;
-      font-weight: bold;
-    }
-
-    .container {
-      width: min(1200px, 94%);
-      margin: 0 auto 30px;
-    }
-
-    .search-panel {
-      display: flex;
-      gap: 10px;
-      flex-wrap: wrap;
-      padding: 16px;
-      background: rgba(17, 27, 43, 0.95);
-      border: 1px solid var(--border);
-      border-radius: 16px;
-      box-shadow: 0 12px 40px rgba(0, 0, 0, 0.25);
-    }
-
-    select,
-    input,
-    button {
-      min-height: 44px;
-      border-radius: 10px;
-      border: 1px solid var(--border);
-      font-size: 15px;
-    }
-
-    select,
-    input {
-      padding: 0 13px;
-      background: #0d1726;
-      color: var(--text);
-      outline: none;
-    }
-
-    select {
-      flex: 0 0 190px;
-      cursor: pointer;
-    }
-
-    input {
-      flex: 1 1 260px;
-      min-width: 180px;
-    }
-
-    input:focus,
-    select:focus {
-      border-color: var(--accent);
-      box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.2);
-    }
-
-    button {
-      padding: 0 17px;
-      background: var(--accent);
-      color: white;
-      border: none;
-      cursor: pointer;
-      font-weight: bold;
-    }
-
-    button:hover {
-      background: var(--accent-hover);
-    }
-
-    button.secondary {
-      background: var(--panel-light);
-      border: 1px solid var(--border);
-    }
-
-    button.secondary:hover {
-      background: #243653;
-    }
-
-    button.danger {
-      background: var(--danger);
-    }
-
-    .toolbar {
-      display: flex;
-      gap: 8px;
-      flex-wrap: wrap;
-      margin-top: 12px;
-    }
-
-    .toolbar button {
-      flex: 1 1 120px;
-    }
-
-    .section-title {
-      margin: 28px 0 12px;
-      font-size: 20px;
-    }
-
-    .sites {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(145px, 1fr));
-      gap: 12px;
-    }
-
-    .site-card {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      min-height: 76px;
-      padding: 12px;
-      background: var(--panel);
-      border: 1px solid var(--border);
-      border-radius: 13px;
-      color: var(--text);
-      text-decoration: none;
-      text-align: center;
-      font-weight: bold;
-      transition: 0.2s ease;
-    }
-
-    .site-card:hover {
-      transform: translateY(-3px);
-      border-color: var(--accent);
-      background: var(--panel-light);
-    }
-
-    .browser-panel {
-      margin-top: 24px;
-      overflow: hidden;
-      background: var(--panel);
-      border: 1px solid var(--border);
-      border-radius: 16px;
-    }
-
-    .browser-header {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      padding: 12px;
-      background: #0d1726;
-      border-bottom: 1px solid var(--border);
-    }
-
-    .browser-header strong {
-      overflow: hidden;
-      text-overflow: ellipsis;
-      white-space: nowrap;
-      color: var(--muted);
-      font-size: 13px;
-    }
-
-    iframe {
-      display: block;
-      width: 100%;
-      height: 650px;
-      border: 0;
-      background: white;
-    }
-
-    .notice {
-      padding: 12px 16px;
-      background: #172554;
-      color: #bfdbfe;
-      border-bottom: 1px solid #1e40af;
-      font-size: 13px;
-      line-height: 1.5;
-    }
-
-    footer {
-      padding: 20px;
-      text-align: center;
-      color: var(--muted);
-      font-size: 13px;
-    }
-
-    @media (max-width: 600px) {
-      .search-panel {
-        padding: 12px;
-      }
-
-      select,
-      input,
-      button {
-        width: 100%;
-        flex-basis: 100%;
-      }
-
-      iframe {
-        height: 520px;
-      }
-    }
-  </style>
+  <link rel="stylesheet" href="style.css">
 </head>
 
 <body>
-  <header>
-    <h1>🌐 WebWorld</h1>
-    <p>Ton portail web gratuit</p>
-    <span class="version">VERSION 2.0 — TEST DE MISE À JOUR</span>
+  <header class="topbar">
+    <div class="logo">🌐 WebWorld</div>
+
+    <div class="top-actions">
+      <button id="historyButton" title="Historique">🕘</button>
+      <button id="privateButton" title="Mode privé">🕶️ Privé</button>
+      <button id="newTabButton" title="Nouvel onglet">＋</button>
+    </div>
   </header>
 
-  <main class="container">
-    <section class="search-panel">
-      <select id="searchEngine" aria-label="Choisir un moteur de recherche">
-        <option value="google">Google</option>
-        <option value="bing">Bing</option>
-        <option value="duckduckgo">DuckDuckGo</option>
-        <option value="yahoo">Yahoo</option>
-        <option value="ecosia">Ecosia</option>
-      </select>
+  <nav id="tabsBar" class="tabs-bar"></nav>
+
+  <main>
+    <section class="navigation-bar">
+      <button id="backButton" title="Retour">←</button>
+      <button id="forwardButton" title="Suivant">→</button>
+      <button id="reloadButton" title="Actualiser">⟳</button>
+      <button id="homeButton" title="Accueil">⌂</button>
 
       <input
-        id="searchInput"
-        type="search"
-        placeholder="Que souhaitez-vous rechercher ?"
+        id="addressInput"
+        type="text"
+        placeholder="Rechercher ou saisir une adresse..."
         autocomplete="off"
       >
 
-      <button id="searchButton" type="button">
-        🔎 Rechercher
-      </button>
+      <button id="goButton">Aller</button>
     </section>
 
-    <div class="toolbar">
-      <button class="secondary" id="backButton" type="button">
-        ◀ Retour
-      </button>
+    <section id="homePage" class="home-page">
+      <h1>Bienvenue sur WebWorld</h1>
+      <p>Un portail web avec onglets, historique et mode privé.</p>
 
-      <button class="secondary" id="forwardButton" type="button">
-        Suivant ▶
-      </button>
+      <div class="search-box">
+        <select id="searchEngine">
+          <option value="https://www.google.com/search?q=">Google</option>
+          <option value="https://www.bing.com/search?q=">Bing</option>
+          <option value="https://duckduckgo.com/?q=">DuckDuckGo</option>
+          <option value="https://search.yahoo.com/search?p=">Yahoo</option>
+          <option value="https://www.ecosia.org/search?q=">Ecosia</option>
+        </select>
 
-      <button class="secondary" id="homeButton" type="button">
-        🏠 Accueil
-      </button>
+        <input
+          id="homeSearchInput"
+          type="search"
+          placeholder="Effectuer une recherche..."
+        >
 
-      <button class="secondary" id="reloadButton" type="button">
-        🔄 Actualiser
-      </button>
-
-      <button class="secondary" id="externalButton" type="button">
-        ↗ Ouvrir à l’extérieur
-      </button>
-    </div>
-
-    <h2 class="section-title">Sites populaires</h2>
-
-    <section class="sites">
-      <a class="site-card" href="https://www.google.com" target="_blank" rel="noopener noreferrer">
-        Google
-      </a>
-
-      <a class="site-card" href="https://www.youtube.com" target="_blank" rel="noopener noreferrer">
-        YouTube
-      </a>
-
-      <a class="site-card" href="https://www.wikipedia.org" target="_blank" rel="noopener noreferrer">
-        Wikipédia
-      </a>
-
-      <a class="site-card" href="https://www.github.com" target="_blank" rel="noopener noreferrer">
-        GitHub
-      </a>
-
-      <a class="site-card" href="https://www.reddit.com" target="_blank" rel="noopener noreferrer">
-        Reddit
-      </a>
-
-      <a class="site-card" href="https://www.amazon.fr" target="_blank" rel="noopener noreferrer">
-        Amazon
-      </a>
-
-      <a class="site-card" href="https://www.lemonde.fr" target="_blank" rel="noopener noreferrer">
-        Le Monde
-      </a>
-
-      <a class="site-card" href="https://www.bbc.com" target="_blank" rel="noopener noreferrer">
-        BBC
-      </a>
-    </section>
-
-    <section class="browser-panel">
-      <div class="browser-header">
-        <span>🌍</span>
-        <strong id="currentAddress">
-          Page d’accueil WebWorld
-        </strong>
+        <button id="homeSearchButton">Rechercher</button>
       </div>
 
-      <div class="notice">
-        Certains sites empêchent volontairement leur affichage dans une fenêtre intégrée.
-        Dans ce cas, utilise le bouton « Ouvrir à l’extérieur ».
+      <div class="quick-links">
+        <a href="https://www.wikipedia.org" target="_blank" rel="noopener">
+          Wikipédia
+        </a>
+
+        <a href="https://www.youtube.com" target="_blank" rel="noopener">
+          YouTube
+        </a>
+
+        <a href="https://github.com" target="_blank" rel="noopener">
+          GitHub
+        </a>
+
+        <a href="https://www.reddit.com" target="_blank" rel="noopener">
+          Reddit
+        </a>
+      </div>
+    </section>
+
+    <section id="historyPanel" class="history-panel hidden">
+      <div class="panel-heading">
+        <h2>Historique</h2>
+        <button id="clearHistoryButton">Effacer</button>
+      </div>
+
+      <div id="historyList"></div>
+    </section>
+
+    <section id="browserPage" class="browser-page hidden">
+      <div id="frameNotice" class="frame-notice">
+        Certains sites refusent l’affichage intégré.
+        Utilise le bouton d’ouverture externe si nécessaire.
       </div>
 
       <iframe
         id="browserFrame"
-        title="Fenêtre de navigation WebWorld"
-        src="about:blank"
-        loading="lazy"
-        referrerpolicy="no-referrer"
+        title="Page web"
+        sandbox="allow-forms allow-modals allow-popups allow-presentation allow-same-origin allow-scripts"
       ></iframe>
+
+      <button id="externalButton" class="external-button">
+        ↗ Ouvrir cette page dans le navigateur
+      </button>
     </section>
   </main>
 
-  <footer>
-    WebWorld — portail web gratuit
-  </footer>
-
-  <script>
-    "use strict";
-
-    const searchInput = document.getElementById("searchInput");
-    const searchEngine = document.getElementById("searchEngine");
-    const searchButton = document.getElementById("searchButton");
-    const browserFrame = document.getElementById("browserFrame");
-    const currentAddress = document.getElementById("currentAddress");
-
-    const backButton = document.getElementById("backButton");
-    const forwardButton = document.getElementById("forwardButton");
-    const homeButton = document.getElementById("homeButton");
-    const reloadButton = document.getElementById("reloadButton");
-    const externalButton = document.getElementById("externalButton");
-
-    const homeUrl = "about:blank";
-
-    const searchUrls = {
-      google: "https://www.google.com/search?q=",
-      bing: "https://www.bing.com/search?q=",
-      duckduckgo: "https://duckduckgo.com/?q=",
-      yahoo: "https://search.yahoo.com/search?p=",
-      ecosia: "https://www.ecosia.org/search?q="
-    };
-
-    function updateAddress(url) {
-      currentAddress.textContent = url;
-    }
-
-    function navigateTo(url) {
-      if (!url || typeof url !== "string") {
-        return;
-      }
-
-      browserFrame.src = url;
-      updateAddress(url);
-    }
-
-    function startSearch() {
-      const query = searchInput.value.trim();
-      const engine = searchEngine.value;
-
-      if (query.length === 0) {
-        searchInput.focus();
-        return;
-      }
-
-      const baseUrl = searchUrls[engine];
-
-      if (!baseUrl) {
-        return;
-      }
-
-      const searchUrl = baseUrl + encodeURIComponent(query);
-      navigateTo(searchUrl);
-    }
-
-    searchButton.addEventListener("click", startSearch);
-
-    searchInput.addEventListener("keydown", function(event) {
-      if (event.key === "Enter") {
-        startSearch();
-      }
-    });
-
-    backButton.addEventListener("click", function() {
-      try {
-        browserFrame.contentWindow.history.back();
-      } catch (error) {
-        window.history.back();
-      }
-    });
-
-    forwardButton.addEventListener("click", function() {
-      try {
-        browserFrame.contentWindow.history.forward();
-      } catch (error) {
-        window.history.forward();
-      }
-    });
-
-    homeButton.addEventListener("click", function() {
-      navigateTo(homeUrl);
-      updateAddress("Page d’accueil WebWorld");
-    });
-
-    reloadButton.addEventListener("click", function() {
-      try {
-        browserFrame.contentWindow.location.reload();
-      } catch (error) {
-        browserFrame.src = browserFrame.src;
-      }
-    });
-
-    externalButton.addEventListener("click", function() {
-      const url = browserFrame.src;
-
-      if (
-        url &&
-        url !== "about:blank" &&
-        url !== window.location.href
-      ) {
-        window.open(url, "_blank", "noopener,noreferrer");
-      }
-    });
-
-    updateAddress("Page d’accueil WebWorld");
-  </script>
+  <script src="app.js"></script>
 </body>
 </html>
